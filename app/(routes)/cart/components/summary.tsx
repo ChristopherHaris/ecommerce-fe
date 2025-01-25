@@ -3,17 +3,48 @@
 import Button from "@/components/ui/button";
 import Currency from "@/components/ui/currency";
 import useCart from "@/hooks/use-cart";
-import { useSearchParams } from "next/navigation";
+import axios from "axios";
 import React from "react";
+import { toast } from "sonner";
 
 const Summary = () => {
-  const searchParams = useSearchParams();
   const items = useCart((state) => state.items);
   const removeAll = useCart((state) => state.remolveAll);
 
   const totalPrice = items.reduce((total, item) => {
     return total + Number(item.price);
   }, 0);
+
+  const onCheckout = async () => {
+    const productIds = items.map((item) => item.id);
+    console.log(productIds);
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_API_URL}/checkout`,
+      {
+        productIds,
+      }
+    );
+
+    console.log(response.data);
+
+    // window.location = response.data.url;
+
+    window.snap.pay(response.data.token, {
+      onSuccess: function (result: any) {
+        toast.success("Payment completed.");
+        removeAll();
+        console.log(result);
+      },
+      onPending: function (result: any) {
+        /* You may add your own implementation here */
+        console.log(result);
+      },
+      onError: function (result: any) {
+        toast.error("Something went wrong.");
+        console.log(result);
+      },
+    });
+  };
 
   return (
     <div className="mt-16 rounded-lg bg-gray-50 px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8">
@@ -24,7 +55,9 @@ const Summary = () => {
           <Currency value={totalPrice} />
         </div>
       </div>
-      <Button className="w-full mt-6">Check Out</Button>
+      <Button onClick={onCheckout} className="w-full mt-6">
+        Check Out
+      </Button>
     </div>
   );
 };

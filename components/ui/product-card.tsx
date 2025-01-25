@@ -3,7 +3,7 @@
 import { Product } from "@/types";
 import Image from "next/image";
 import IconButton from "./icon-button";
-import { Expand, Mouse, ShoppingCart } from "lucide-react";
+import { Expand, ShoppingCart } from "lucide-react";
 import Currency from "./currency";
 import { useRouter } from "next/navigation";
 import { MouseEventHandler } from "react";
@@ -66,7 +66,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
       </div>
       <div className="flex items-center justify-between">
         <Currency value={data?.price} />
-        {/* <Button>Buy Now</Button> */}
+   
       </div>
     </div>
   );
