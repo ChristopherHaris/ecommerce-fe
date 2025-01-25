@@ -19,8 +19,6 @@ const ProductPage: React.FC<ProductPageProps> = async ({ params }) => {
     categoryId: product?.categories?.id,
   });
 
-  console.log(product);
-
   return (
     <div className="bg-white">
       <Container>
