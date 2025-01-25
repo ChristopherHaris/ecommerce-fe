@@ -6,11 +6,11 @@ import ProductList from "@/components/product-list";
 import Container from "@/components/ui/container";
 import React from "react";
 
-export interface ProductPageProps {
-  params: { productId: string } & Promise<unknown>;
-}
-
-const ProductPage = async ({ params }: ProductPageProps) => {
+export default async function ProductPage({
+  params,
+}: {
+  params: { productId: string };
+}) {
   const { productId } = params;
 
   const product = await getProduct(productId);
@@ -35,6 +35,4 @@ const ProductPage = async ({ params }: ProductPageProps) => {
       </Container>
     </div>
   );
-};
-
-export default ProductPage;
+}
