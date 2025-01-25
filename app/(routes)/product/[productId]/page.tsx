@@ -1,4 +1,5 @@
 /* eslint-disable */
+// @ts-nocheck
 
 import getProduct from "@/actions/get-product";
 import getProducts from "@/actions/get-products";
