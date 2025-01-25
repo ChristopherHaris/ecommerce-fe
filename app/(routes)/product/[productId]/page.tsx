@@ -9,7 +9,8 @@ import React from "react";
 export default async function ProductPage({
   params,
 }: {
-  params: { productId: string };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  params: { productId: string } & Promise<any>;
 }) {
   const { productId } = params;
 
