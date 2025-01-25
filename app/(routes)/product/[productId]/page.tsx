@@ -7,11 +7,11 @@ import Container from "@/components/ui/container";
 import React from "react";
 
 interface ProductPageProps {
-  params: Promise<{ productId: string }>;
+  params: { productId: string }
 }
 
 const ProductPage: React.FC<ProductPageProps> = async ({ params }) => {
-  const { productId } = await params;
+  const { productId } = params;
 
   const product = await getProduct(productId);
 
