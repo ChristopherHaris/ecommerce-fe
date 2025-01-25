@@ -27,19 +27,16 @@ const Summary = () => {
 
     console.log(response.data);
 
-    // window.location = response.data.url;
-
     window.snap.pay(response.data.token, {
-      onSuccess: function (result: any) {
+      onSuccess: function (result: unknown) {
         toast.success("Payment completed.");
         removeAll();
         console.log(result);
       },
-      onPending: function (result: any) {
-        /* You may add your own implementation here */
+      onPending: function (result: unknown) {
         console.log(result);
       },
-      onError: function (result: any) {
+      onError: function (result: unknown) {
         toast.error("Something went wrong.");
         console.log(result);
       },

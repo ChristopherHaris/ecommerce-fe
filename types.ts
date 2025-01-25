@@ -38,3 +38,11 @@ export interface Product {
     name: string;
     value: string;
   }
+
+  declare global {
+    interface Window {
+      snap: {
+        pay: (token: string, options: unknown) => void;
+      };
+    }
+  }
