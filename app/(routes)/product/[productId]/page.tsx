@@ -6,12 +6,8 @@ import ProductList from "@/components/product-list";
 import Container from "@/components/ui/container";
 import React from "react";
 
-export interface Params {
-  productId: string;
-}
-
 export interface ProductPageProps {
-  params: Params;
+  params: { productId: string } & Promise<unknown>;
 }
 
 const ProductPage = async ({ params }: ProductPageProps) => {
