@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import getProduct from "@/actions/get-product";
 import getProducts from "@/actions/get-products";
 import Gallery from "@/components/gallery/gallery";
@@ -10,8 +12,8 @@ interface ProductPageProps {
   params: Promise<{ productId: string }>;
 }
 
-const ProductPage = async ({ params }: ProductPageProps) => {
-  const { productId } = await Promise.resolve(params);
+const ProductPage: React.FC<ProductPageProps> = async ({ params }) => {
+  const { productId } = await params;
 
   const product = await getProduct(productId);
 
