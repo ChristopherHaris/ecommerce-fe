@@ -6,12 +6,11 @@ import ProductList from "@/components/product-list";
 import Container from "@/components/ui/container";
 import React from "react";
 
-export default async function ProductPage({
-  params,
-}: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  params: { productId: string } & Promise<any>;
-}) {
+interface ProductPageProps {
+  params: { productId: string };
+}
+
+const ProductPage: React.FC<ProductPageProps> = async ({ params }) => {
   const { productId } = params;
 
   const product = await getProduct(productId);
@@ -36,4 +35,6 @@ export default async function ProductPage({
       </Container>
     </div>
   );
-}
+};
+
+export default ProductPage;
