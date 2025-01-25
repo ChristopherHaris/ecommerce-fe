@@ -6,11 +6,11 @@
 // import Container from "@/components/ui/container";
 import React from "react";
 
-interface ProductPageProps {
-  params: Promise<{ productId: string }>;
-}
+// interface ProductPageProps {
+//   params: Promise<{ productId: string }>;
+// }
 
-const ProductPage: React.FC<ProductPageProps> = async ({  }) => {
+const ProductPage = async ({  }) => {
   // const { productId } = await params;
 
   // const product = await getProduct(productId);
