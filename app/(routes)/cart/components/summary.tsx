@@ -1,5 +1,6 @@
 "use client";
 
+import updatePaidStatus from "@/actions/update-paid-status";
 import Button from "@/components/ui/button";
 import Currency from "@/components/ui/currency";
 import useCart from "@/hooks/use-cart";
@@ -30,6 +31,7 @@ const Summary = () => {
     window.snap.pay(response.data.token, {
       onSuccess: function (result: unknown) {
         toast.success("Payment completed.");
+        updatePaidStatus(response.data.orderId);
         removeAll();
         console.log(result);
       },

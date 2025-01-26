@@ -28,7 +28,7 @@ const useCart = create(
     },
     remolveAll: () => {
       set({ items: [] });
-      toast.success("Cart cleared.");
+      // toast.success("Cart cleared.");
     },
   }), {
     name: "cart-storage",
