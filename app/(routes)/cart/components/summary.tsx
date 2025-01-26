@@ -3,12 +3,16 @@
 import updatePaidStatus from "@/actions/update-paid-status";
 import Button from "@/components/ui/button";
 import Currency from "@/components/ui/currency";
+import IconButton from "@/components/ui/icon-button";
 import useCart from "@/hooks/use-cart";
 import axios from "axios";
+import { Loader2 } from "lucide-react";
 import React from "react";
 import { toast } from "sonner";
 
 const Summary = () => {
+  const [loading, setLoading] = React.useState(false);
+
   const items = useCart((state) => state.items);
   const removeAll = useCart((state) => state.remolveAll);
 
@@ -17,6 +21,7 @@ const Summary = () => {
   }, 0);
 
   const onCheckout = async () => {
+    setLoading(true);
     const productIds = items.map((item) => item.id);
     console.log(productIds);
     const response = await axios.post(
@@ -31,20 +36,19 @@ const Summary = () => {
     window.snap.pay(response.data.token, {
       onSuccess: function (result: unknown) {
         toast.success("Payment completed.");
+        setLoading(false);
         updatePaidStatus(response.data.orderId);
         removeAll();
         console.log("success:", result);
-      },
-      onPending: function (result: unknown) {
-        console.log(result);
       },
       onError: function (result: unknown) {
         toast.error("Something went wrong.");
         console.log(result);
       },
       onClose: function () {
+        toast.error("Payment cancelled.");
         console.log("order closed");
-      }
+      },
     });
   };
 
@@ -57,9 +61,21 @@ const Summary = () => {
           <Currency value={totalPrice} />
         </div>
       </div>
-      <Button onClick={onCheckout} className="w-full mt-6">
-        Check Out
-      </Button>
+      {loading ? (
+        <IconButton
+          onClick={onCheckout}
+          className="w-full mt-6"
+          icon={<Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+        />
+      ) : (
+        <Button
+          disabled={items.length === 0}
+          onClick={onCheckout}
+          className="w-full mt-6"
+        >
+          Check Out
+        </Button>
+      )}
     </div>
   );
 };
