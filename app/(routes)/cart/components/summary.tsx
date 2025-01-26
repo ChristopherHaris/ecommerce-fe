@@ -5,6 +5,7 @@ import Button from "@/components/ui/button";
 import Currency from "@/components/ui/currency";
 import useCart from "@/hooks/use-cart";
 import axios from "axios";
+import { on } from "events";
 import React from "react";
 import { toast } from "sonner";
 
@@ -33,7 +34,7 @@ const Summary = () => {
         toast.success("Payment completed.");
         updatePaidStatus(response.data.orderId);
         removeAll();
-        console.log(result);
+        console.log("success:", result);
       },
       onPending: function (result: unknown) {
         console.log(result);
@@ -42,6 +43,9 @@ const Summary = () => {
         toast.error("Something went wrong.");
         console.log(result);
       },
+      onClose: function () {
+        console.log("order closed");
+      }
     });
   };
 
