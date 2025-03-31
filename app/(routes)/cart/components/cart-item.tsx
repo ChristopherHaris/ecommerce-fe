@@ -1,15 +1,15 @@
 "use client";
-
 import Currency from "@/components/ui/currency";
 import IconButton from "@/components/ui/icon-button";
+import Input from "@/components/ui/input";
 import useCart from "@/hooks/use-cart";
 import { Product } from "@/types";
-import { X } from "lucide-react";
+import { Minus, Plus, X } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 
 interface CartItemProps {
-  data: Product;
+  data: Product & { selectedQuantity?: number };
 }
 
 const CartItem: React.FC<CartItemProps> = ({ data }) => {
@@ -19,6 +19,18 @@ const CartItem: React.FC<CartItemProps> = ({ data }) => {
     cart.removeItem(data.id);
   };
 
+  const handleIncrement = () => {
+    cart.addQuantity(data.id);
+  };
+
+  const handleDecrement = () => {
+    cart.decreaseQuantity(data.id);
+  };
+
+  // Convert quantity to number for comparisons
+  const quantity = data.selectedQuantity || 1;
+  const maxQuantity = parseInt(String(data.quantity)) || 10;
+
   return (
     <li className="flex py-6 border-b">
       <div className="relative h-24 w-24 overflow-hidden rounded-md sm:h-48 sm:w-48">
@@ -26,7 +38,7 @@ const CartItem: React.FC<CartItemProps> = ({ data }) => {
           className="object-cover object-center"
           fill
           src={data.images[0].url}
-          alt="image"
+          alt={data.name}
         />
       </div>
       <div className="relative ml-4 flex flex-1 flex-col justify-between sm:ml-6">
@@ -38,14 +50,36 @@ const CartItem: React.FC<CartItemProps> = ({ data }) => {
             <p className="text-lg font-semibold text-black">{data.name}</p>
           </div>
           <div className="mt-1 flex text-sm">
-            <p className="text-gray-500">{data.colors.name}</p>
-            <p className="ml-4 border-l border-gray-200 pl-4">
-              {data.sizes.name}
-            </p>
+            {data.colors && <p className="text-gray-500">{data.colors.name}</p>}
+            {data.sizes && (
+              <p className="ml-4 border-l border-gray-200 pl-4">
+                {data.sizes.name}
+              </p>
+            )}
           </div>
           <div className="mt-1 text-sm font-medium text-gray-900">
             <Currency value={data.price} />
           </div>
+        </div>
+        <div className="flex items-center gap-x-3">
+          <IconButton
+            className="rounded-md"
+            icon={<Minus size={15} />}
+            onClick={handleDecrement}
+          />
+          <div className="w-16 h-10 flex items-center justify-center border rounded-md">
+            {quantity}
+          </div>
+          <IconButton
+            className="rounded-md"
+            icon={<Plus size={15} />}
+            onClick={handleIncrement}
+            disabled={quantity >= maxQuantity}
+          />
+        </div>
+        <div className="mt-2 text-sm text-gray-500">
+          Subtotal:{" "}
+          <Currency value={(parseFloat(data.price) * quantity).toString()} />
         </div>
       </div>
     </li>

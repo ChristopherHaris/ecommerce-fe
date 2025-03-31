@@ -4,12 +4,14 @@ import React, { MouseEventHandler } from "react";
 interface IconButtonProps {
   icon: React.ReactElement;
   onClick?: MouseEventHandler<HTMLButtonElement> | undefined;
+  disabled?: boolean;
   className?: string;
 }
 
 const IconButton: React.FC<IconButtonProps> = ({
   icon,
   onClick,
+  disabled,
   className,
 }) => {
   return (
@@ -19,6 +21,7 @@ const IconButton: React.FC<IconButtonProps> = ({
         "rounded-full flex items-center justify-center bg-white border shadow-md p-2 hover:scale-110 transition",
         className
       )}
+      disabled={disabled}
     >
       {icon}
     </button>

@@ -33,7 +33,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
 
     cart.addItem(data);
   };
-  console.log(data);
+  // console.log(data);
 
   return (
     <div
