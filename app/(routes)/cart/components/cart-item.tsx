@@ -1,7 +1,6 @@
 "use client";
 import Currency from "@/components/ui/currency";
 import IconButton from "@/components/ui/icon-button";
-import Input from "@/components/ui/input";
 import useCart from "@/hooks/use-cart";
 import { Product } from "@/types";
 import { Minus, Plus, X } from "lucide-react";
