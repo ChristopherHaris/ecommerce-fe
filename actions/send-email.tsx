@@ -55,7 +55,7 @@ export const sendEmail = async () => {
 
     // Send email via API route
     const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_API_URL}/send`,
+      `${process.env.NEXT_PUBLIC_SEND_URL}/send`,
       emailData
     );
 
