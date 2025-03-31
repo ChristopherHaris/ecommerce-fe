@@ -55,12 +55,7 @@ const Summary = () => {
           });
           setLoading(false);
           updatePaidStatus(response.data.orderId);
-          const emailSent = await sendEmail();
-          if (emailSent) {
-            toast.info("Thank You For Your Purchase.", {
-              description: "Please check your email for your purchase details.",
-            });
-          }
+          sendEmail();
           removeAll();
           console.log("success:", result);
         },
