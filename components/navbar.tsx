@@ -18,7 +18,7 @@ const categories = await getCategories();
             <p className="font-bold text-xl">Store</p>
           </Link>
           <MainNav data={categories}/>
-          <NavbarActions />
+          <NavbarActions data={categories}/>
         </div>
       </Container>
     </div>
