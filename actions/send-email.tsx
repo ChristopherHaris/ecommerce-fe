@@ -1,9 +1,6 @@
-"use client";
-
 import { toast } from "sonner";
 import axios from "axios";
 import useCart from "@/hooks/use-cart";
-import { useUser } from "@clerk/nextjs";
 
 interface PurchasedItem {
   name: string;
@@ -12,24 +9,28 @@ interface PurchasedItem {
   imageUrl?: string;
 }
 
-export const sendEmail = async () => {
-  const { user } = useUser();
-
+const sendEmail = async (user: any) => {
   try {
     const items = useCart.getState().items;
 
     if (!items.length || !user) {
       console.error("Missing required data for email");
-      return;
+      return false; // Return false to indicate failure
     }
 
     // Format items for the email template
     const emailItems: PurchasedItem[] = items.map((item) => ({
       name: item.name,
-      price: Number(item.price),
       quantity: item.selectedQuantity || 1,
+      price: Number(item.price),
       imageUrl: item.images?.[0]?.url,
     }));
+
+    if (emailItems.length > 0) {
+      console.log("Email Items:", emailItems[0]);
+    } else {
+      console.error("No items to display for email.");
+    }
 
     // Calculate total amount
     const totalAmount = emailItems.reduce(
@@ -53,6 +54,8 @@ export const sendEmail = async () => {
       totalAmount,
     };
 
+    console.log("Email Data:", emailData);
+
     // Send email via API route
     const response = await axios.post(
       `${process.env.NEXT_PUBLIC_SEND_URL}/send`,
@@ -63,12 +66,31 @@ export const sendEmail = async () => {
       toast.success("Purchase confirmation email sent!");
       return true;
     } else {
-      console.error("Failed to send email:", response.data);
+      console.error("Failed to send email:", response); // Log the entire response
+      toast.error(`Failed to send email. Status: ${response.status}`);
       return false;
     }
-  } catch (error) {
+  } catch (error: any) {
+    // Use 'any' type for error for now
     console.error("Error sending confirmation email:", error);
-    toast.error("Failed to send confirmation email");
+
+    if (error.response) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx
+      console.error("Server responded with:", error.response.data);
+      toast.error(
+        `Server error: ${error.response.data.error || "Unknown error"}`
+      ); // Show server error message
+    } else if (error.request) {
+      // The request was made but no response was received
+      console.error("No response received:", error.request);
+      toast.error("No response from server.  Check your network.");
+    } else {
+      // Something happened in setting up the request that triggered an Error
+      console.error("Error setting up the request:", error.message);
+      toast.error(`Request setup error: ${error.message}`);
+    }
+
     return false;
   }
 };

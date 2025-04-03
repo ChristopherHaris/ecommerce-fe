@@ -26,7 +26,7 @@ export default function RootLayout({
       <html lang="en">
         <body className={font.className}>
           <ModalProvider />
-          <Toaster richColors expand={true} position={"top-right"} />
+          <Toaster richColors expand={true} position={"top-center"} />
           <Navbar />
           {children}
           <Footer />

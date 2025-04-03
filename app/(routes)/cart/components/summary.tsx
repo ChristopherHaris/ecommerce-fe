@@ -55,7 +55,7 @@ const Summary = () => {
           });
           setLoading(false);
           updatePaidStatus(response.data.orderId);
-          sendEmail();
+          sendEmail(user);
           removeAll();
           console.log("success:", result);
         },
