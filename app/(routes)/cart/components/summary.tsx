@@ -47,8 +47,6 @@ const Summary = () => {
         }
       );
 
-      console.log(response.data)
-
       window.snap.pay(response.data.token, {
         onSuccess: async function (result: unknown) {
           toast.success("Payment completed.");
