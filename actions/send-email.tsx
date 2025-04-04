@@ -9,7 +9,7 @@ interface PurchasedItem {
   imageUrl?: string;
 }
 
-const sendEmail = async (user: any) => {
+const sendEmail = async (user: any, orderId: string) => {
   try {
     const items = useCart.getState().items;
 
@@ -48,7 +48,7 @@ const sendEmail = async (user: any) => {
     const emailData = {
       name: user.fullName,
       email: user.emailAddresses[0].emailAddress,
-      orderId: `ORD-${Date.now().toString(36).toUpperCase()}`,
+      orderId: orderId,
       orderDate,
       items: emailItems,
       totalAmount,
