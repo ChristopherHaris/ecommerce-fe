@@ -20,19 +20,19 @@ const Summary = () => {
 
   const totalPrice = items.reduce((total, item) => {
     const itemPrice = Number(item.price);
-    const quantity = item.selectedQuantity || 1;
+    const quantity = item.selectedQuantity;
     return total + itemPrice * quantity;
   }, 0);
 
   const totalItems = items.reduce((total, item) => {
-    return total + (item.selectedQuantity || 1);
+    return total + (item.selectedQuantity);
   }, 0);
 
   const onCheckout = async () => {
     setLoading(true);
     const productIds = items.map((item) => ({
       id: item.id,
-      quantity: item.selectedQuantity || 1,
+      quantity: item.selectedQuantity,
     }));
 
     try {
@@ -81,10 +81,10 @@ const Summary = () => {
     <>
       <SignedIn>
         <div className="mt-16 rounded-lg bg-gray-50 px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8">
-          <h2 className="text-lg font-medium text-gray-900">Order Summary</h2>
+          <h2 className="text-base sm:text-lg font-medium text-gray-900">Order Summary</h2>
           <div className="mt-6 space-y-4">
             <div className="flex items-center justify-between border-t border-gray-200 pt-4">
-              <div className="text-base font-medium text-gray-900">
+              <div className="text-sm sm:text-base font-medium text-gray-900">
                 Order total ({totalItems} {totalItems === 1 ? "item" : "items"})
               </div>
               <Currency value={totalPrice} />

@@ -61,12 +61,11 @@ const ProductCard = ({ data }: ProductCardProps) => {
         </div>
       </div>
       <div>
-        <p className="font-semibold text-lg">{data.name}</p>
-        <p className="text-sm text-gray-500">{data.categories?.name}</p>
+        <p className="font-semibold text-sm sm:text-lg">{data.name}</p>
+        <p className="text-xs sm:text-sm text-gray-500">{data.categories?.name}</p>
       </div>
       <div className="flex items-center justify-between">
         <Currency value={data?.price} />
-   
       </div>
     </div>
   );

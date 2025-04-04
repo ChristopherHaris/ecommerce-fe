@@ -29,7 +29,7 @@ const Info: React.FC<InfoProps> = ({ data }) => {
         </div>
       </div>
       <hr className="my-4" />
-      <div className="flex flex-col gap-y-3">
+      <div className="flex flex-col gap-y-3 mb-6">
         {data.isSize && (
           <div className="flex items-center gap-x-4">
             <h3 className="font-semibold text-black">Size:</h3>
@@ -67,6 +67,9 @@ const Info: React.FC<InfoProps> = ({ data }) => {
             />
           </div>
         )}
+      </div>
+      <div className="mt-3 flex items-end justify-between">
+        <div className="text-sm text-gray-500">{data.description}</div>
       </div>
       <div className="mt-10 flex items-center justify-between gap-x-3">
         <Button className="flex items-center gap-x-2" onClick={onAddToCart}>
