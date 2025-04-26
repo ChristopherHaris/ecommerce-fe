@@ -2,10 +2,12 @@ import Container from "@/components/ui/container";
 import getOrders from "@/actions/get-orders";
 import { auth } from "@clerk/nextjs/server";
 import OrderItem from "./components/order-items";
+import { redirect } from "next/navigation";
 
 const OrderPage = async () => {
   const { userId } = auth();
-  const orders = await getOrders(userId ?? "");
+  if (!userId) return redirect("/sign-in");
+  const orders = await getOrders(userId);
 
   return (
     <div className="bg-white">
