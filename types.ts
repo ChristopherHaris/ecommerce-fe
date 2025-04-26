@@ -4,6 +4,15 @@ export interface Billboard {
   imageUrl: string;
 }
 
+export interface Store {
+  id: string;
+  name: string;
+  owner: string;
+  isGateway: boolean;
+  accountNumber: string;
+  userId: string;
+}
+
 export interface Category {
   id: string;
   name: string;
@@ -47,6 +56,23 @@ export interface Color {
   id: string;
   name: string;
   value: string;
+}
+
+export interface Order {
+  id: string;
+  storeId: string;
+  isPaid: boolean;
+  phone: string;
+  address: string;
+  email: string;
+  userId: string;
+}
+
+export interface OrderItem {
+  id: string;
+  orderId: string;
+  productId: string;
+  buyQuantity: number;
 }
 
 declare global {

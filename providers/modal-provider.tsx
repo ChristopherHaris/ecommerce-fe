@@ -1,5 +1,6 @@
 "use client";
 
+import PaymentModal from "@/components/payment-modal";
 import PreviewModal from "@/components/preview-modal";
 import React from "react";
 
@@ -14,7 +15,12 @@ const ModalProvider = () => {
     return null;
   }
 
-  return <PreviewModal/>;
+  return (
+    <>
+      <PreviewModal />
+      <PaymentModal />
+    </>
+  );
 };
 
 export default ModalProvider;

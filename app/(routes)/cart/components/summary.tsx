@@ -6,17 +6,20 @@ import Button from "@/components/ui/button";
 import Currency from "@/components/ui/currency";
 import IconButton from "@/components/ui/icon-button";
 import useCart from "@/hooks/use-cart";
+import usePaymentModal from "@/hooks/use-payment-modal";
+import { Store } from "@/types";
 import { SignedIn, SignedOut, SignIn, useUser } from "@clerk/nextjs";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-const Summary = () => {
-  const [loading, setLoading] = React.useState(false);
+const Summary = ({ store }: { store: Store }) => {
+  const [loading, setLoading] = useState(false);
   const items = useCart((state) => state.items);
   const removeAll = useCart((state) => state.removeAll);
   const { user } = useUser();
+  const paymentModal = usePaymentModal();
 
   const totalPrice = items.reduce((total, item) => {
     const itemPrice = Number(item.price);
@@ -25,8 +28,10 @@ const Summary = () => {
   }, 0);
 
   const totalItems = items.reduce((total, item) => {
-    return total + (item.selectedQuantity);
+    return total + item.selectedQuantity;
   }, 0);
+
+  const [orderId, setOrderId] = useState<string>("");
 
   const onCheckout = async () => {
     setLoading(true);
@@ -47,29 +52,39 @@ const Summary = () => {
         }
       );
 
-      window.snap.pay(response.data.token, {
-        onSuccess: async function (result: unknown) {
-          toast.success("Payment completed.");
-          toast.info("Thank You For Your Purchase.", {
-            description: "Please check your email for your purchase deatils.",
-          });
-          setLoading(false);
-          updatePaidStatus(response.data.orderId);
-          sendEmail(user, response.data.orderId);
-          removeAll();
-          console.log("success:", result);
-        },
-        onError: function (result: unknown) {
-          toast.error("Something went wrong.");
-          console.log(result);
-          setLoading(false);
-        },
-        onClose: function () {
-          setLoading(false);
-          toast.error("Payment cancelled.");
-          console.log("order closed");
-        },
-      });
+      setOrderId(response.data.orderId);
+
+      if (store.isGateway) {
+        window.snap.pay(response.data.token, {
+          onSuccess: async function (result: unknown) {
+            toast.success("Payment completed.");
+            toast.info("Thank You For Your Purchase.", {
+              description: "Please check your email for your purchase deatils.",
+            });
+            setLoading(false);
+            updatePaidStatus(orderId);
+            sendEmail(user, orderId);
+            removeAll();
+            console.log("success:", result);
+          },
+          onError: function (result: unknown) {
+            toast.error("Something went wrong.");
+            console.log(result);
+            setLoading(false);
+          },
+          onClose: function () {
+            setLoading(false);
+            toast.error("Payment cancelled.");
+            console.log("order closed");
+          },
+        });
+      }
+
+      paymentModal.onOpen(store);
+
+      if (!paymentModal.isOpen) {
+        setLoading(false);
+      }
     } catch (error) {
       toast.error("Failed to initialize checkout.");
       console.error(error);
@@ -77,11 +92,26 @@ const Summary = () => {
     }
   };
 
+  useEffect(() => {
+    if (paymentModal.isDone && orderId) {
+      setLoading(false);
+      updatePaidStatus(orderId);
+      sendEmail(user, orderId);
+      toast.success("Payment completed.");
+      toast.info("Thank You For Your Purchase.", {
+        description: "Please check your email for your purchase deatils.",
+      });
+      removeAll();
+    }
+  }, [orderId, paymentModal.isDone, removeAll, user]);
+
   return (
     <>
       <SignedIn>
         <div className="mt-16 rounded-lg bg-gray-50 px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8">
-          <h2 className="text-base sm:text-lg font-medium text-gray-900">Order Summary</h2>
+          <h2 className="text-base sm:text-lg font-medium text-gray-900">
+            Order Summary
+          </h2>
           <div className="mt-6 space-y-4">
             <div className="flex items-center justify-between border-t border-gray-200 pt-4">
               <div className="text-sm sm:text-base font-medium text-gray-900">
@@ -112,7 +142,7 @@ const Summary = () => {
           <h2 className="text-lg font-medium text-gray-900">
             Please Sign In to Checkout
           </h2>
-          <p className="mb-6 text-gray-500">*please use UBM email</p>
+          {/* <p className="mb-6 text-gray-500">*please use UBM email</p> */}
           <SignIn />
         </div>
       </SignedOut>

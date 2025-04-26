@@ -1,13 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Button from "./ui/button";
-import { ShoppingBag } from "lucide-react";
 import useCart from "@/hooks/use-cart";
-import { useRouter } from "next/navigation";
 import { SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import MobileMenus from "./mobile-menu";
 import { Category } from "@/types";
+import NavigationButton from "./navigation-button";
 
 interface NavbarActionsProps {
   data: Category[];
@@ -20,7 +18,6 @@ const NavbarActions = ({ data }: NavbarActionsProps) => {
     setIsMounted(true);
   }, []);
 
-  const router = useRouter();
   const cart = useCart();
 
   if (!isMounted) {
@@ -30,15 +27,7 @@ const NavbarActions = ({ data }: NavbarActionsProps) => {
   return (
     <div className="ml-auto flex items-center gap-x-2">
       <div className="hidden sm:flex">
-        <Button
-          onClick={() => router.push("/cart")}
-          className="flex items-center rounded-full bg-black mx-2 px-4 py-2"
-        >
-          <ShoppingBag size={20} color="white" />
-          <span className="ml-2 text-sm font-medium text-white">
-            {cart.items.length}
-          </span>
-        </Button>
+        <NavigationButton cartLength={cart.items.length}/>
       </div>
       <div className="flex sm:hidden">
         <MobileMenus data={data}/>

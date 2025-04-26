@@ -13,7 +13,7 @@ const HomePage = async () => {
     "25a66c77-a5d4-4123-8964-83bc56841f07"
   );
 
-  console.log(products);
+  // console.log(products);
 
   return (
     <Container>
