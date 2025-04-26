@@ -78,12 +78,12 @@ const Summary = ({ store }: { store: Store }) => {
             console.log("order closed");
           },
         });
-      }
+      } else {
+        paymentModal.onOpen(store);
 
-      paymentModal.onOpen(store);
-
-      if (!paymentModal.isOpen) {
-        setLoading(false);
+        if (!paymentModal.isOpen) {
+          setLoading(false);
+        }
       }
     } catch (error) {
       toast.error("Failed to initialize checkout.");
