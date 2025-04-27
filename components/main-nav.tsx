@@ -12,7 +12,12 @@ interface MainNavProps {
 
 const MainNav: React.FC<MainNavProps> = ({ data }) => {
   const pathname = usePathname();
-  const routes = data.map((route) => ({
+  const sortedData = data.sort((a, b) => {
+    if (a.name === "Pre Order") return 1;
+    if (b.name === "Pre Order") return -1;
+    return 0;
+  });
+  const routes = sortedData.map((route) => ({
     href: `/category/${route.id}`,
     label: route.name,
     active: pathname === `/category/${route.id}`,

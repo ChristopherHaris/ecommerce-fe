@@ -6,7 +6,7 @@ interface BillboardProps {
 }
 
 const Billboard: React.FC<BillboardProps> = ({ data }) => {
-  return (
+  return data.imageUrl ? (
     <div className="p-4 sm:p-6 lg:p-8 rounded-xl overflow-hidden">
       <div
         className="aspect-[16/11] md:aspect-[2.4/1] rounded-xl relative overflow-hidden bg-cover object-cover object-center h-full w-full"
@@ -19,7 +19,8 @@ const Billboard: React.FC<BillboardProps> = ({ data }) => {
         </div>
       </div>
     </div>
-  );
+  ) : null;
 };
 
 export default Billboard;
+
