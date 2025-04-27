@@ -9,6 +9,7 @@ const Footer = () => {
             <a
               href="https://github.com/ChristopherHaris"
               rel="noopener noreferrer"
+              target="_blank"
               className="hover:underline"
             >
               Sakana
