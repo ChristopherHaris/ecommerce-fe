@@ -2,6 +2,7 @@
 import getOrderItems from "@/actions/get-order-items";
 import getProduct from "@/actions/get-product";
 import Currency from "@/components/ui/currency";
+import { cn } from "@/lib/utils";
 import { Order, Product } from "@/types";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -84,6 +85,25 @@ const OrderItem: React.FC<OrderItemProps> = ({ data }) => {
               />
             </div>
           </div>
+          <div className="flex flex-col flex-1 items-end justify-between text-sm">
+            <p
+              className={cn("text-sm font-medium", {
+                "text-green-600": data.confirm === "CONFIRM",
+                "text-red-600": data.confirm === "DENY",
+                "text-yellow-600": data.confirm === "PENDING",
+              })}
+            >
+              {data.confirm === "CONFIRM"
+                ? "Confirmed"
+                : data.confirm === "DENY"
+                ? "Denied"
+                : "Pending"}
+            </p>
+            <p className="text-sm font-medium text-gray-900">
+              {item.buyQuantity} x{" "}
+            </p>
+          </div>
+          <div></div>
         </li>
       ))}
     </>

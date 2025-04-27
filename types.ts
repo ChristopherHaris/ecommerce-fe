@@ -62,6 +62,7 @@ export interface Order {
   id: string;
   storeId: string;
   isPaid: boolean;
+  confirm: string;
   phone: string;
   address: string;
   email: string;
