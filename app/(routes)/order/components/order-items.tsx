@@ -1,51 +1,25 @@
 "use client";
-import getOrderItems from "@/actions/get-order-items";
-import getProduct from "@/actions/get-product";
+
 import Currency from "@/components/ui/currency";
 import { cn } from "@/lib/utils";
 import { Order, Product } from "@/types";
 import Image from "next/image";
-import { useEffect, useState } from "react";
 
 interface OrderItemProps {
   data: Order;
+  prefetchedItems: Array<{
+    product: Product;
+    id: string;
+    orderId: string;
+    productId: string;
+    buyQuantity: number;
+  }>;
 }
 
-interface OrderItem {
-  product: Product;
-  id: string;
-  orderId: string;
-  productId: string;
-  buyQuantity: number;
-}
-
-const OrderItem: React.FC<OrderItemProps> = ({ data }) => {
-  const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
-
-  useEffect(() => {
-    const fetchOrderItems = async () => {
-      if (!data || !data.id) return;
-
-      try {
-        const items = await getOrderItems(data.id);
-        const itemsWithProduct = await Promise.all(
-          items.map(async (item) => {
-            const product = await getProduct(item.productId);
-            return { ...item, product };
-          })
-        );
-        setOrderItems(itemsWithProduct);
-      } catch (error) {
-        console.error("Error fetching order items:", error);
-      }
-    };
-
-    fetchOrderItems();
-  }, [data]);
-
+const OrderItem: React.FC<OrderItemProps> = ({ data, prefetchedItems }) => {
   return (
     <>
-      {orderItems.map((item) => (
+      {prefetchedItems.map((item) => (
         <li key={item.id} className="flex py-6 border-b">
           <div className="relative h-24 w-24 overflow-hidden rounded-md sm:h-48 sm:w-48">
             <Image
@@ -86,19 +60,24 @@ const OrderItem: React.FC<OrderItemProps> = ({ data }) => {
             </div>
           </div>
           <div className="flex flex-col flex-1 items-end justify-between text-sm">
-            <p
-              className={cn("text-sm font-medium", {
-                "text-green-600": data.confirm === "CONFIRM",
-                "text-red-600": data.confirm === "DENY",
-                "text-yellow-600": data.confirm === "PENDING",
-              })}
-            >
-              {data.confirm === "CONFIRM"
-                ? "Confirmed"
-                : data.confirm === "DENY"
-                ? "Denied"
-                : "Pending"}
-            </p>
+            <div className="flex flex-col items-end gap-0.5">
+              <p
+                className={cn("text-sm font-medium", {
+                  "text-green-600": data.confirm === "CONFIRM",
+                  "text-red-600": data.confirm === "DENY",
+                  "text-yellow-600": data.confirm === "PENDING",
+                })}
+              >
+                {data.confirm === "CONFIRM"
+                  ? "Confirmed"
+                  : data.confirm === "DENY"
+                  ? "Denied"
+                  : "Pending"}
+              </p>
+              <p className="text-xs text-gray-500">
+                {item.product.isPreOrder && "Pre-Order"}
+              </p>
+            </div>
             <p className="text-sm font-medium text-gray-900">
               {item.buyQuantity} x{" "}
             </p>

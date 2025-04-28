@@ -40,6 +40,7 @@ export interface Product {
   isColor: boolean;
   isDimension: boolean;
   isWeight: boolean;
+  isPreOrder: boolean;
 }
 
 export interface Image {
