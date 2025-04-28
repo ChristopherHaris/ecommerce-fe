@@ -6,7 +6,7 @@ import useCart from "@/hooks/use-cart";
 import { cn } from "@/lib/utils";
 import { Category } from "@/types";
 import { Dialog, DialogPanel } from "@headlessui/react";
-import { Menu, ShoppingBag, X } from "lucide-react";
+import { Menu, Package, ShoppingBag, X } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 
@@ -60,6 +60,18 @@ const MobileMenus: React.FC<MobileMenusProps> = ({ data }) => {
                 <ShoppingBag size={20} color="white" />
                 <span className="ml-2 text-sm font-medium text-white">
                   {cart.items.length}
+                </span>
+              </Button>
+              <Button
+                onClick={() => {
+                  router.push("/order");
+                  onClose();
+                }}
+                className="flex items-center justify-center rounded-lg bg-black mx-auto px-4 py-2 w-full"
+              >
+                <Package size={20} color="white" />
+                <span className="ml-2 text-sm font-medium text-white">
+                  Order
                 </span>
               </Button>
               {routes.map((route) => (
