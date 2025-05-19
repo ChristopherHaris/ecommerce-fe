@@ -1,14 +1,16 @@
-import getCategory from "@/actions/get-category";
-import getColors from "@/actions/get-colors";
-import getProducts from "@/actions/get-products";
-import getSizes from "@/actions/get-sizes";
-import Billboard from "@/components/billboard";
+import { Suspense } from "react";
 import Container from "@/components/ui/container";
-import React from "react";
-import Filter from "./components/filter";
-import ProductCard from "@/components/ui/product-card";
-import NoResults from "@/components/ui/no-results";
 import MobileFilters from "./components/mobile-filters";
+import CategoryBillboard from "./components/category-billboard";
+
+
+import getSizes from "@/actions/get-sizes";
+import getColors from "@/actions/get-colors";
+import BillboardSkeleton from "@/components/skeleton/billboard-skeleton";
+import FiltersSkeleton from "@/components/skeleton/filter-skeleton";
+import CategoryFilters from "./components/category-filters";
+import CategoryProducts from "./components/category-products";
+import ProductSkeleton from "@/components/skeleton/product-skeleton";
 
 export const revalidate = 0;
 
@@ -27,43 +29,53 @@ const CategoryPage: React.FC<CategoryPageProps> = async ({
   const { categoryId } = await params;
   const { colorId, sizeId } = await searchParams;
 
-  const products = await getProducts({
-    categoryId,
-    colorId,
-    sizeId,
-  });
-  const sizes = await getSizes();
-  const colors = await getColors();
-  const category = await getCategory(categoryId);
-
-  // console.log(category);
-
   return (
     <div className="bg-white">
       <Container>
-        {category.isBillboard && category.billboards && (
-          <Billboard data={category.billboards} />
-        )}
+        {/* Billboard section with Suspense */}
+        <Suspense fallback={<BillboardSkeleton />}>
+          <CategoryBillboard categoryId={categoryId} />
+        </Suspense>
+
         <div className="p-4 sm:p-6 lg:p-8 px-4 sm:px-6 lg:px-8 pb-24">
           <div className="lg:grid lg:grid-cols-5 lg:gap-x-8">
-            <MobileFilters sizes={sizes} colors={colors} />
+            {/* Mobile filters - will receive filters via props */}
+            <Suspense
+              fallback={<div className="lg:hidden">Loading filters...</div>}
+            >
+              <MobileFiltersWrapper />
+            </Suspense>
+
+            {/* Desktop filters with Suspense */}
             <div className="hidden lg:block">
-              <Filter valueKey="sizeId" name="Sizes" data={sizes} />
-              <Filter valueKey="colorId" name="Colors" data={colors} />
+              <Suspense fallback={<FiltersSkeleton />}>
+                <CategoryFilters />
+              </Suspense>
             </div>
+
+            {/* Products grid with Suspense */}
             <div className="mt-6 lg:col-span-4 lg:mt-0">
-              {products.length === 0 && <NoResults />}
-              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                {products.map((item) => (
-                  <ProductCard key={item.id} data={item} />
-                ))}
-              </div>
+              <Suspense fallback={<ProductSkeleton />}>
+                <CategoryProducts
+                  categoryId={categoryId}
+                  colorId={colorId}
+                  sizeId={sizeId}
+                />
+              </Suspense>
             </div>
           </div>
         </div>
       </Container>
     </div>
   );
+};
+
+// Wrapper component to fetch and pass data to MobileFilters
+const MobileFiltersWrapper = async () => {
+  const sizes = await getSizes();
+  const colors = await getColors();
+
+  return <MobileFilters sizes={sizes} colors={colors} />;
 };
 
 export default CategoryPage;
